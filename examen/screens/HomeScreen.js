@@ -1,43 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Button, Image } from 'react-native';
+import { launchCameraAsync } from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
 
-export default function MapScreen() {
-  const [location, setLocation] = useState(null);
+export function HomeScreen ({navigation}){
+  const [imageUri, setImageUri] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permiso de ubicación no concedido');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
+  const openCamera = async () => {
+    const result = await launchCameraAsync({
+      mediaTypes: 'Images',
+      allowsEditing: true,
+      quality: 1
+    });
+    if (!result.cancelled) {
+      setImageUri(result.uri);
+    }
+  };
 
   return (
-    <MapView
-      style={{ flex: 1 }}
-      region={{
-        latitude: location ? location.coords.latitude : 37.78825,
-        longitude: location ? location.coords.longitude : -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }}
-    >
-      {location && (
-        <Marker
-          coordinate={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          }}
-          title="Mi ubicación"
-        />
-      )}
-    </MapView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Bienvenido</Text>
+      <View style={styles.buttonContainer}>
+        <Button title="Abrir cámara" onPress={openCamera} />
+        <Button title="Lista de tareas" onPress={() => navigation.navigate('ToDoListScreen')} />
+      </View>
+      {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+    </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold'
+  },
+  buttonContainer: {
+    marginTop: 20
+  },
+  image: {
+    marginTop: 20,
+    width: 200,
+    height: 200
+  }
+});
+
 

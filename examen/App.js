@@ -1,26 +1,18 @@
-import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import Constants from 'expo-constants';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {HomeScreen} from './screens/HomeScreen'
-
-// You can import from local files
-import AssetExample from './components/AssetExample';
-
-// or any pure javascript modules available in npm
-import { Card } from 'react-native-paper';
-
+import HomeScreen from './screens/HomeScreen';
+import ToDoListScreen from './screens/ToDoListScreen';
 
 const Stack = createStackNavigator();
 
-export default function App() {
+export default function App () {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Navigator initialRouteName="Inicio">
+        <Stack.Screen name="Inicio" component={HomeScreen}/>
+        <Stack.Screen name="ToDoListScreen" component={ToDoListScreen} options={{ title: 'Lista de tareas' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
