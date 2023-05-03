@@ -15,7 +15,7 @@ import * as Permissions from 'expo-permissions';
 import { v4 as uuidv4 } from 'uuid';
 import { addTask } from '../utils/TaskStorage';
 
-export function TareasScreen () {
+export function TareasScreen() {
   const navigation = useNavigation();
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
@@ -78,6 +78,7 @@ export function TareasScreen () {
       description: taskDescription,
       image,
     };
+    console.log('Tarea guardada:', task); // Agregar este console.log
     await addTask(task);
     navigation.goBack();
   };
@@ -104,86 +105,78 @@ export function TareasScreen () {
             <Image source={{ uri: image }} style={styles.imagePreview} />
           )}
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={pickImage}
-            >
+            <TouchableOpacity style={styles.button} onPress={pickImage}>
               <Text style={styles.buttonText}>Galería</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={takePicture}
-            >
+            <TouchableOpacity style={styles.button} onPress={takePicture}>
               <Text style={styles.buttonText}>Cámara</Text>
             </TouchableOpacity>
           </View>
         </View>
         <TouchableOpacity style={styles.saveButton} onPress={saveTask}>
           <Text style={styles.saveButtonText}>Guardar tarea</Text>
-</TouchableOpacity>
+        </TouchableOpacity>
       </View>
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
-container: {
-flex: 1,
-backgroundColor: '#fff',
-paddingHorizontal: 20,
-paddingVertical: 30,
-},
-inputContainer: {
-flex: 1,
-justifyContent: 'center',
-},
-titleInput: {
-fontSize: 20,
-marginBottom: 20,
-borderBottomColor: '#ccc',
-borderBottomWidth: 1,
-},
-descriptionInput: {
-fontSize: 16,
-marginBottom: 20,
-textAlignVertical: 'top',
-borderBottomColor: '#ccc',
-borderBottomWidth: 1,
-},
-imageContainer: {
-marginBottom: 20,
-},
-imagePreview: {
-width: '100%',
-height: 200,
-resizeMode: 'cover',
-marginBottom: 10,
-},
-buttonsContainer: {
-flexDirection: 'row',
-justifyContent: 'space-between',
-},
-button: {
-backgroundColor: '#ccc',
-paddingVertical: 10,
-paddingHorizontal: 20,
-borderRadius: 5,
-marginRight: 10,
-},
-buttonText: {
-fontSize: 16,
-color: '#fff',
-},
-saveButton: {
-backgroundColor: '#2196F3',
-paddingVertical: 10,
-paddingHorizontal: 20,
-borderRadius: 5,
-},
-saveButtonText: {
-fontSize: 16,
-color: '#fff',
-textAlign: 'center',
-},
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  inputContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  titleInput: {
+    fontSize: 20,
+    marginBottom: 20,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+  },
+  descriptionInput: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlignVertical: 'top',
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+  },
+  imageContainer: {
+    marginBottom: 20,
+  },
+  imagePreview: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+    marginBottom: 10,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  button: {
+    backgroundColor: '#ccc',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#fff',
+  },
+  saveButton: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  saveButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    textAlign: 'center',
+  },
 });
-
-
