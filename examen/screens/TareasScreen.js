@@ -6,8 +6,10 @@ export function TareasScreen({ navigation, setNotes }) {
   const [content, setContent] = useState('');
 
   function handleSaveNote() {
+    
     const note = { title, content };
     setNotes([...notes, note]); // Agrega la nueva nota al final del array existente de notas
+    localStorage.setItem('notes', JSON.stringify([...notes, note]));
     navigation.goBack();
   }
 
