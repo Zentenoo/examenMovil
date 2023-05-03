@@ -7,8 +7,8 @@ export function InicioScreen({ navigation }) {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       const notesFromStorage = JSON.parse(localStorage.getItem('notes') || '[]');
-      setNotes(notesFromStorage);
-    });
+  setNotes(notesFromStorage);
+    },[]);
 
     return unsubscribe;
   }, [navigation]);
