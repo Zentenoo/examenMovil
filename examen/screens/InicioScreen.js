@@ -1,75 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList,Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { getTasks } from '../utils/TaskStorage';
 
-export function InicioScreen ({ navigation, route }){
-  const [notes, setNotes] = useState([]);
-
-  useEffect(() => {
-    const getNotes = async () => {
-      const notesFromStorage = JSON.parse(
-        localStorage.getItem('notes') || '[]'
-      );
-      setNotes(notesFromStorage);
-    };
-
-    getNotes();
-  }, []);
+const InicioScreen = () => {
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    if (route.params?.setNotes) {
-      const updatedNotes = JSON.parse(localStorage.getItem('notes') || '[]');
-      setNotes(updatedNotes);
-      route.params.setNotes(updatedNotes);
-    }
-  }, [route.params?.setNotes]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      updateTasks();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const updateTasks = async () => {
+    const tasks = await getTasks();
+    setTasks(tasks);
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.taskContainer}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.description}>{item.description}</Text>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Lista de Tareas</Text>
       <FlatList
-        data={notes}
-        keyExtractor={(note) => note.id}
-        renderItem={({ item }) => (
-          <View style={styles.note}>
-            <Text style={styles.noteTitle}>{item.title}</Text>
-            <Text style={styles.noteContent}>{item.content}</Text>
-            <Text style={styles.noteDate}>{item.date}</Text>
-          </View>
-        )}
+        data={tasks}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        style={styles.list}
       />
-      <Button title="Agregar nota" onPress={() => navigation.navigate('Tareas', { setNotes })} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  note: {
-    marginBottom: 20,
-  },
-  noteTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  noteContent: {
-    fontSize: 16,
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  noteDate: {
-    fontSize: 14,
-    color: '#666',
-  },
-});
-
-
-
-
