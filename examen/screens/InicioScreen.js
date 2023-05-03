@@ -1,46 +1,23 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, Button } from 'react-native';
 
+export function InicioScreen({ navigation }) {
+  const [notes, setNotes] = useState([]);
 
-export function InicioScreen({ navigation, notes }) {
   return (
-    <View style={styles.container}>
-      {notes.map((note) => (
-        <Text key={note.id} style={styles.note}>
-          {note.text}
-        </Text>
-      ))}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Tareas')}
-      >
-        <Text style={styles.buttonText}>Agregar nota</Text>
-      </TouchableOpacity>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 24, marginBottom: 20 }}>Lista de notas</Text>
+      {notes.length > 0 ? (
+        notes.map((note, index) => (
+          <View key={index} style={{ marginBottom: 10 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{note.title}</Text>
+            <Text style={{ fontSize: 16 }}>{note.content}</Text>
+          </View>
+        ))
+      ) : (
+        <Text style={{ fontSize: 18 }}>No hay notas guardadas</Text>
+      )}
+      <Button title="Agregar nota" onPress={() => navigation.navigate('Tareas', { setNotes })} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  note: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
