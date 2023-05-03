@@ -5,13 +5,19 @@ export function TareasScreen({ navigation, setNotes }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
-  function handleSaveNote() {
-    
-    const note = { title, content };
-    setNotes([...notes, note]); // Agrega la nueva nota al final del array existente de notas
-    localStorage.setItem('notes', JSON.stringify([...notes, note]));
-    navigation.goBack();
-  }
+  const saveNote = () => {
+  const note = {
+    id: uuidv4(),
+    title: title,
+    content: content,
+    date: new Date().toLocaleString(),
+  };
+
+  const notesFromStorage = JSON.parse(localStorage.getItem('notes') || '[]');
+  localStorage.setItem('notes', JSON.stringify([...notesFromStorage, note]));
+  navigation.goBack();
+};
+
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
@@ -28,7 +34,7 @@ export function TareasScreen({ navigation, setNotes }) {
         style={{ fontSize: 18, height: 200, textAlignVertical: 'top' }}
         multiline
       />
-      <Button title="Guardar" onPress={handleSaveNote} />
+      <Button title="Guardar" onPress={saveNote} />
     </View>
   );
 }
