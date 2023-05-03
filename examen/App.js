@@ -4,6 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import {InicioScreen} from './screens/InicioScreen'
 import {TareasScreen} from './screens/TareasScreen'
 const Stack = createStackNavigator();
+window.React = React;
+
 
 export default function App () {
   const [notes, setNotes] = useState([]);
