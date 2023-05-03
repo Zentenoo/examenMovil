@@ -1,44 +1,32 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, TextInput, Button } from 'react-native';
 
+export function TareasScreen({ navigation, setNotes }) {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
-export function TareasScreen() {
-  const [noteText, setNoteText] = useState('');
-  const navigation = useNavigation();
-
-  const saveNote = () => {
-  const newNote = { id: Date.now(), text: noteText };
-  setNotes([...notes, newNote]);
-  navigation.goBack();
-};
-
+  function handleSaveNote() {
+    const note = { title, content };
+    setNotes([...notes, note]); // Agrega la nueva nota al final del array existente de notas
+    navigation.goBack();
+  }
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1, padding: 20 }}>
       <TextInput
-        style={styles.input}
-        onChangeText={setNoteText}
-        value={noteText}
-        placeholder="Escribe una nota..."
-        multiline={true}
+        placeholder="Título de la nota"
+        value={title}
+        onChangeText={(text) => setTitle(text)}
+        style={{ fontSize: 18, marginBottom: 10 }}
       />
-      <Button title="Guardar" onPress={saveNote} />
+      <TextInput
+        placeholder="Contenido de la nota"
+        value={content}
+        onChangeText={(text) => setContent(text)}
+        style={{ fontSize: 18, height: 200, textAlignVertical: 'top' }}
+        multiline
+      />
+      <Button title="Guardar" onPress={handleSaveNote} />
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  input: {
-    height: 200,
-    fontSize: 18,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-  },
-});
