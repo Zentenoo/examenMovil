@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button } from 'react-native';
 
 export function InicioScreen({ navigation }) {
   const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      const notesFromStorage = JSON.parse(localStorage.getItem('notes') || '[]');
+      setNotes(notesFromStorage);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
