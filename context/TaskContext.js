@@ -1,4 +1,5 @@
 import React, { createContext, useReducer } from 'react';
+import { v4 as uuidv4 } from 'uuid'; // Importar la función uuidv4
 
 export const TaskContext = createContext();
 
@@ -9,7 +10,8 @@ const initialState = {
 function taskReducer(state, action) {
   switch (action.type) {
     case 'ADD_TASK':
-      return { tasks: [...state.tasks, action.payload] };
+      const newTask = { ...action.payload, id: uuidv4() }; // Asignar un ID único a la tarea
+      return { tasks: [...state.tasks, newTask] };
     case 'REMOVE_TASK':
       return { tasks: state.tasks.filter(task => task.id !== action.payload) };
     default:
@@ -34,5 +36,6 @@ export const TaskProvider = ({ children }) => {
     </TaskContext.Provider>
   );
 };
+
 
 

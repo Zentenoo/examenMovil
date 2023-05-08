@@ -1,9 +1,23 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity,Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, Button } from 'react-native';
 import { TaskContext } from '../context/TaskContext';
+import { firestore } from '../firebase';
 
-export const InicioScreen = ({ route, navigation }) => {
+export const InicioScreen = ({ navigation }) => {
+  useEffect(() => {
+    const unsubscribe = firestore.collection('tareas').onSnapshot((snapshot) => {
+      const tasks = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTasks(tasks);
+    });
+  
+    return () => unsubscribe();
+  }, []);
   const { tasks } = useContext(TaskContext);
+
+  console.log(tasks)
 
   const handleTaskPress = (taskId) => {
     navigation.navigate('Detalles', { taskId });
@@ -36,7 +50,7 @@ export const InicioScreen = ({ route, navigation }) => {
       ) : (
         <Text style={styles.empty}>No hay tareas</Text>
       )}
-      <Button title="Agregar" onPress={()=>navigation.navigate('Tareas')}/>
+      <Button title="Agregar" onPress={() => navigation.navigate('Tareas')} />
     </View>
   );
 };
@@ -75,6 +89,5 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
-
 
 

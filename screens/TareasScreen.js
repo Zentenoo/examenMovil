@@ -4,27 +4,35 @@ import { useNavigation } from '@react-navigation/native';
 import * as Permissions from 'expo-permissions';
 import DatePicker from 'react-native-datepicker';
 import { requestCameraPermissionsAsync } from 'expo-camera';
-
+import {firestore} from '../firebase'
 import { TaskContext } from '../context/TaskContext';
 
 export const TareasScreen = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
   const [image, setImage] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const { addTask } = useContext(TaskContext);
   const navigation = useNavigation();
 
- 
-
   const handleSaveTask = () => {
-  const newTask = { title, description, date, image };
-  addTask(newTask);
-  navigation.navigate('Inicio', { newTask });
-};
+    if (!selectedDate) {
+      setSelectedDate(new Date()); // Asignar la fecha actual si no se ha seleccionado ninguna fecha
+    }
 
-
+    const newTask = { title, description, date: selectedDate, image };
+    firestore
+      .collection('tareas') // Nombre de la colección donde se guardarán las tareas
+      .add(newTask)
+      .then((docRef) => {
+        console.log('Tarea guardada con ID:', docRef.id);
+        addTask(newTask); // Agregar la tarea en el contexto TaskContext
+        navigation.navigate('Inicio', { newTask });
+      })
+      .catch((error) => {
+        console.error('Error al guardar la tarea:', error);
+      });
+  };
 
   const handleOpenCamera = async () => {
     const { status } = await requestCameraPermissionsAsync();
@@ -71,11 +79,12 @@ export const TareasScreen = () => {
       <Text style={styles.label}>Imagen:</Text>
       <Button title="Tomar foto" onPress={handleOpenCamera} />
       {image && <Image source={{ uri: image }} style={styles.image} />}
-      <Button title="Cambiar fecha" onPress={() => setDate(new Date())} />
+      <Button title="Cambiar fecha" onPress={() => setSelectedDate(new Date())} />
       <Button title="Guardar tarea" onPress={handleSaveTask} />
     </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
